@@ -1,0 +1,39 @@
+MaxiYatzy is a dice game for 1-10 players. In this variant there are
+six dice to throw. The goal of the game is to gain the most points.
+
+Game progresses with players taking turns. On turn, a player has
+a number of dice throws at their disposal. If the player has
+throws left, they can either throw dice or score points.
+Unused throws will be spared for the next round. At the start
+of their turn player is given 3 throws, which will be combined
+with spared throws from previous rounds, if any. If the player
+has thrown dice and intends to make a new throw, they can
+leave any number of dice unthrown, keeping their number.
+Dice left unthrown at a previous throw can be thrown on
+subsequent throws. At the beginning of their turn, if
+the player intends to throw any dice, all dice must be
+thrown.
+
+Scoring is determined by a scoring table, which gives points
+for combinations of the dice values. When scoring, the player
+can choose which combination they want scored. For example, if 
+they have three sixes in their dice, they can score it in 
+either triplets or pairs, each of which will score them points.
+They can also score a combination they don't have for zero points.
+In the previous example, if the player doesn't have a fourth six,
+they can nevertheless score quartet for no points. Combinations
+which have been scored can not be scored again. The game ends
+when every player has scored all their combinations, either with
+points or zeros. No throw is mandatory at the beginning of a turn:
+a player may score any combination for zeros and spare the three
+throws given for future turns.
+
+The scoring table has a special section, where there is a score
+for any number of each of the faces of the dice, from one to six. 
+For example, a throw with three two's can be scored for six points
+in this section. If a player gathers a total of 84 points in this section,
+averaging at having four of the corresponding dice at each combination,
+they will receive 40 extra points. As a result, points in this section
+will be shown as difference from points for four of the kind. With three
+times two set into this section, the shown score would thus be
+3 x 2 - 4 x 2 = -2.
