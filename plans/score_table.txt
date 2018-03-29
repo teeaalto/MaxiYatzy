@@ -1,0 +1,28 @@
+
+                | Player 1 | Player 2   
+1               |     0    |   --       
+2               |    -2    |    0       
+3               |    -3    |    0       
+4               |     0    |    0       
+5               |     0    |    0       
+6               |    +6    |    0       
+---------------------------|------------
+sum             |    85    |   80       
+bonus           |    50    |   --       
+---------------------------|------------
+pair            |    12    |   10       
+two pairs       |    20    |   22       
+three pairs     |    30    |   --       
+three of a kind |    15    |   18       
+four of a kind  |    20    |   24       
+five of a kind  |    --    |   25       
+small straight  |    15    |   --       
+large straight  |    --    |   20       
+full straight   |     0    |   21       
+cabin           |    24    |   --       
+villa           |    33    |   30       
+tower           |    --    |   34       
+chance          |    24    |   27       
+yatzy           |    --    |   50       
+--------------------------------------- 
+total           |   328    |  361       
