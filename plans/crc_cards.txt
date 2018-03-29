@@ -1,0 +1,77 @@
+Class:          
+    View 
+Responsibility: 
+    The user interface. Handles IO with the user,
+    gets output from its controller
+    and sends user input to the controller            
+Collaborators:
+    Controller
+
+----------------------------------------------------
+
+Class:
+    Controller
+Responsibility:
+    Communication between the user interface
+    and game logic
+Collaborators:
+    MaxiYatzy
+
+----------------------------------------------------
+
+Class:
+    MaxiYatzy
+Responsibility:
+    Delegating tasks to Collaborators
+Collaborators:
+    Players
+    ScoreTable
+    Dices
+
+----------------------------------------------------
+
+Class:
+    Players
+Responsibility:
+    Contains the data about the players of the game
+Collaborators:
+    Player
+
+----------------------------------------------------
+
+Class:
+    Player
+Responsibility:
+    Contains data about a single player of the game
+Collaborators:
+    None
+
+----------------------------------------------------
+
+Class:
+    ScoreTable
+Responsibility:
+    Contains the scoring combinations of dices
+    and player score
+Collaborators:
+    Score
+
+----------------------------------------------------
+
+Class:
+    Score
+Responsibility:
+    A single scoring combination of dices;
+    can determine how many points any combination
+    of dices can yield when this score is chosen
+Collaborators:
+    None
+
+----------------------------------------------------
+
+Class:
+    Dices
+Responsibility:
+    Generates a dice roll
+Collaborators:
+    None
