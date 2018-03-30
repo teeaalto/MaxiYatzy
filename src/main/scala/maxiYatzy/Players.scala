@@ -2,11 +2,7 @@ package maxiYatzy
 
 import scala.collection.mutable.ArrayBuffer
 
-/* class Players {
-
-} */
-
-object Players {
+class Players {
   val players = new ArrayBuffer[String]
 
   def addPlayer(name: String) = {

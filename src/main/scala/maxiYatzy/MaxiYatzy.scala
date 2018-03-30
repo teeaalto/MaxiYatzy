@@ -1,5 +1,7 @@
 package maxiYatzy
 
-object MaxiYatzy {
-  def addPlayer(name: String) = Players.addPlayer(name)
+class MaxiYatzy {
+  val players = new Players
+
+  def addPlayer(name: String) = players.addPlayer(name)
 }
