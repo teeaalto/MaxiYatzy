@@ -8,17 +8,19 @@ object MaxiYatzyCmd {
     val ctrl = new CmdController
 
     @tailrec
-    def playTheGame(message: String): Unit = {
-      println(message)
+    def playTheGame(status: String, request: String): Unit = {
+      println(status)
+      println(request)
       print(">")
       val input = scala.io.StdIn.readLine()
       if (input == "quit") println("Exiting MaxiYatzy...")
       else {
-        val nextMessage = ctrl.parse(input)
-        playTheGame(nextMessage)
+        val nextStatus = ctrl.parse(input)
+        val nextRequest = ctrl.request
+        playTheGame(nextStatus, nextRequest)
       }
     }
 
-    playTheGame(ctrl.initialMessage)
+    playTheGame(ctrl.initialStatus, ctrl.request)
   }
 }

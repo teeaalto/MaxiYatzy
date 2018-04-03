@@ -1,0 +1,5 @@
+package maxiYatzy
+
+class ScoreTable {
+
+}
