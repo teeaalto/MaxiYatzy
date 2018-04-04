@@ -3,7 +3,7 @@ package maxiYatzy
 import math.random
 
 class Dices {
-  private val result: Array[Int] = Array(0,0,0,0,0,0,0)
+  private val result: Array[Int] = Array(0,0,0,0,0,0)
 
   private def throwOne(): Int =
     math.round(6*random + 0.5).toInt
@@ -11,7 +11,7 @@ class Dices {
   def throwGiven(ds: Array[Int]): Array[Int] = {
     for (i <- ds) {
       try {
-        result(i) = throwOne
+        result(i - 1) = throwOne
       } catch {
         case ex: IndexOutOfBoundsException => ()
       }
@@ -20,7 +20,7 @@ class Dices {
   }
 
   def throwAll(): Array[Int] = {
-    for (i <- 1 to 6) result(i) = throwOne
+    for (i <- 0 to 5) result(i) = throwOne
     result
   }
 }

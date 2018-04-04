@@ -40,7 +40,7 @@ class CmdController {
 
       val res = {
         for (i <- 1 to 6) yield {
-          s"Dice $i: " + diceResult(i)
+          s"Dice $i: " + diceResult(i-1)
         }
       }
       res.mkString("\n")
@@ -59,7 +59,7 @@ class CmdController {
 
         val res = {
           for (i <- 1 to 6) yield {
-            s"Dice $i: " + diceResult(i)
+            s"Dice $i: " + diceResult(i-1)
           }
         }
         res.mkString("\n")
