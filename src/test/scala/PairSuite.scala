@@ -1,5 +1,5 @@
 import org.scalatest.FunSuite
-import maxiYatzy.scores.Pairs.score
+import maxiYatzy.scores.Pair.score
 
 class PairSuite extends FunSuite {
   test("A simple pair should score the sum of numbers") {

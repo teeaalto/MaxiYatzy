@@ -27,9 +27,11 @@ class Players {
     if (!players.contains(currentPlayer)) currentPlayer = 1
   }
 
-  def currentPlName(): String = players(currentPlayer).name
+  def currentPlName: String = players(currentPlayer).name
 
-  def playersThrows(): Int = {
+  def currentPlNum: Int = currentPlayer
+
+  def playersThrows: Int = {
     players(currentPlayer).throws
   }
 

@@ -5,7 +5,7 @@ import java.util.NoSuchElementException
 import scala.collection.mutable.HashMap
 
 abstract class Score {
-  def name
+  def name = "default"
 
   protected def occurrances(dices: Array[Int]): Array[(Int,Int)] = {
     val occ = new HashMap[Int, Int]()

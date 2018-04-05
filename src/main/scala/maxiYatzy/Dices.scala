@@ -23,4 +23,6 @@ class Dices {
     for (i <- 0 to 5) result(i) = throwOne
     result
   }
+
+  def prevThrow = result
 }
