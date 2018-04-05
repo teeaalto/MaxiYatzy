@@ -9,7 +9,8 @@ class ScoreTable {
     (7,Pair),
     (10,ThreeOfAKind),
     (11,FourOfAKind),
-    (12,FiveOfAKind)
+    (12,FiveOfAKind),
+    (20,Yatzy)
   )
 
   private val scores = new ArrayBuffer[(Int,  // Player name
