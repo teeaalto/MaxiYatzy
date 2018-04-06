@@ -6,13 +6,17 @@ import scala.collection.mutable.ArrayBuffer
 
 class ScoreTable {
   private val combinations = Array(
-    (7,Pair),
-    (8,TwoPairs),
-    (9,ThreePairs),
-    (10,ThreeOfAKind),
-    (11,FourOfAKind),
-    (12,FiveOfAKind),
-    (20,Yatzy)
+    (8,Pair),
+    (9,TwoPairs),
+    (10,ThreePairs),
+    (11,ThreeOfAKind),
+    (12,FourOfAKind),
+    (13,FiveOfAKind),
+    (14,SmallStraight),
+    (15,LargeStraight),
+    (16,FullStraight),
+    (20,Chance),
+    (21,Yatzy)
   )
 
   private val scores = new ArrayBuffer[(Int,  // Player name
