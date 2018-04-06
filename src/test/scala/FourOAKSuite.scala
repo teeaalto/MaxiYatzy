@@ -1,7 +1,7 @@
 import org.scalatest.FunSuite
 import maxiYatzy.scores.FourOfAKind.score
 
-class FOAKSuite extends FunSuite {
+class FourOAKSuite extends FunSuite {
   test("A simple four of a kind should score the sum of numbers") {
     assert(score(Array(1,3,3,4,3,3)) == 12)
   }

@@ -13,7 +13,7 @@ object MaxiYatzyCmd {
       println(request)
       print(">")
       val input = scala.io.StdIn.readLine()
-      if (input == "quit") println("Exiting MaxiYatzy...")
+      if (input.trim.toLowerCase == "quit") println("Exiting MaxiYatzy...")
       else {
         val nextStatus = ctrl.parse(input)
         val nextRequest = ctrl.request

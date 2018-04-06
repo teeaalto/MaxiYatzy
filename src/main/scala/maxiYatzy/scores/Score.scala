@@ -21,5 +21,17 @@ abstract class Score {
     occ.toArray.sortBy(_._1)
   }
 
+  protected def highestRepetition(dices: Array[Int], minrep: Int): Int = {
+    val occ = occurrances(dices)
+
+    var hirep = 0
+    for (i <- occ.indices) {
+      val elem = occ(i)
+      if (elem._2 >= minrep) hirep = elem._1
+    }
+
+    hirep
+  }
+
   def score(dices: Array[Int]): Int
 }

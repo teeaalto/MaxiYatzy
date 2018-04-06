@@ -3,15 +3,7 @@ package maxiYatzy.scores
 object FourOfAKind extends Score {
   override val name = "four of a kind"
 
-  def score(dices: Array[Int]): Int = {
-    val occ = occurrances(dices)
+  def score(dices: Array[Int]): Int =
+    4*highestRepetition(dices,4)
 
-    var quadr = 0
-    for (i <- occ.indices) {
-      val elem = occ(i)
-      if (elem._2 >= 4) quadr = elem._1
-    }
-
-    4*quadr
-  }
 }

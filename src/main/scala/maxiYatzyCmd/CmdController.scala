@@ -23,7 +23,7 @@ class CmdController {
   private var initialThrowDone = false
 
   private def parseNewPlayer(str: String): String = {
-    if (str == "ok") {
+    if (str.toLowerCase.trim == "ok") {
       if (playerAdded) {
         currentParser = parseThrowScore
         myatzy.addThrows(3)
@@ -56,23 +56,27 @@ class CmdController {
     else {
       if (!initialThrowDone) "Make an initial throw with 'throw all'"
       else {
-        val dicesSplit = dices.split(",")
-        val dicesArray = for (d <- dicesSplit) yield {
-          d.trim.toInt
-        }
-        if (dicesArray.exists(num => (num < 1 || num > 6)))
-          "Specify the dices to throw as a comma separated sequence, e.g. 'throw 2,4,5'"
-        else {
-          val diceResult = myatzy.throwGiven(dicesArray)
-          myatzy.useThrow()
-          updateThrowRequest()
-
-          val res = {
-            for (i <- 1 to 6) yield {
-              s"Dice $i: " + diceResult(i - 1)
-            }
+        try {
+          val dicesSplit = dices.split(",")
+          val dicesArray = for (d <- dicesSplit) yield {
+            d.trim.toInt
           }
-          res.mkString("\n")
+          if (dicesArray.exists(num => (num < 1 || num > 6)))
+            "Specify the dices to throw as a comma separated sequence, e.g. 'throw 2,4,5'"
+          else {
+            val diceResult = myatzy.throwGiven(dicesArray)
+            myatzy.useThrow()
+            updateThrowRequest()
+
+            val res = {
+              for (i <- 1 to 6) yield {
+                s"Dice $i: " + diceResult(i - 1)
+              }
+            }
+            res.mkString("\n")
+          }
+        } catch {
+          case _: NumberFormatException => "Specify the dices to throw as either 'all' or e.g. '2,4,5'"
         }
       }
     }
@@ -92,7 +96,7 @@ class CmdController {
 
 
   private def parseThrowScore(str: String): String = {
-    val strSplit = str.split(" ")
+    val strSplit = str.toLowerCase.split(" ")
 
     strSplit(0) match {
       case "throw" => {
