@@ -1,5 +1,8 @@
 package maxiYatzy.scores
 
+/**
+  * Five of a kind scores the sum of dice values
+  */
 object FiveOfAKind extends Score {
   override val name = "five of a kind"
 

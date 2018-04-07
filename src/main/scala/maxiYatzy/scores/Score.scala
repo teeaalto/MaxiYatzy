@@ -4,6 +4,10 @@ import java.util.NoSuchElementException
 
 import scala.collection.mutable.HashMap
 
+/**
+  * Abstract score class. Provides the interface
+  * all scores offer.
+  */
 abstract class Score {
   def name = "default"
 
@@ -33,5 +37,11 @@ abstract class Score {
     hirep
   }
 
+  /**
+    * Check the score of a given set of dices;
+    * zero if requirements of the combination are not met
+    * @param dices The combination of dices to score
+    * @return Points on offer for the dices by this scoring combination
+    */
   def score(dices: Array[Int]): Int
 }

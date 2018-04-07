@@ -1,5 +1,9 @@
 package maxiYatzy.scores
 
+/**
+  * Chance score; any combination of dices
+  * yields the sum of dice values
+  */
 object Chance extends Score {
   override val name = "chance"
 

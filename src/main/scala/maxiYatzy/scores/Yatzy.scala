@@ -1,5 +1,8 @@
 package maxiYatzy.scores
 
+/**
+  * Having the same number on all dices scores 50 points
+  */
 object Yatzy extends Score {
   override val name = "yatzy"
 

@@ -1,5 +1,8 @@
 package maxiYatzy.scores
 
+/**
+  * Having a pair scores the sum of values
+  */
 object Pair extends Score {
   override val name = "pair"
 

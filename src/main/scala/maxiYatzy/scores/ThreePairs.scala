@@ -1,5 +1,9 @@
 package maxiYatzy.scores
 
+/**
+  * Having three distinct pairs (as in, not of the
+  * same dice value) scores the sum of dice values
+  */
 object ThreePairs extends Score {
   override val name = "three pairs"
 

@@ -1,5 +1,9 @@
 package maxiYatzy.scores
 
+/**
+  * Small straight score; having all dice values
+  * between one and five scores the sum of values (15)
+  */
 object SmallStraight extends Score {
   override val name = "small straight"
 

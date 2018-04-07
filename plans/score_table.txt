@@ -20,7 +20,7 @@ small straight  |    15    |   --
 large straight  |    --    |   20       
 full straight   |     0    |   21       
 cabin           |    24    |   --       
-villa           |    33    |   30       
+house           |    33    |   30       
 tower           |    --    |   34       
 chance          |    24    |   27       
 yatzy           |    --    |   50       

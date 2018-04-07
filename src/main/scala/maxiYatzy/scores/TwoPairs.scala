@@ -1,5 +1,9 @@
 package maxiYatzy.scores
 
+/**
+  * Having two distinct pairs (as in, not of the same dice number)
+  * scores the sum of dice values
+  */
 object TwoPairs extends Score {
   override val name = "two pairs"
 

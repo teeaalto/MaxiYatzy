@@ -1,26 +1,98 @@
 package maxiYatzy
 
+/**
+  * A class to pull the system logic of MaxiYatzy together.
+  * Handles the communication between the controllers
+  * and system components.
+  */
 class MaxiYatzy {
   private val players = new Players
   private val scoretab = new ScoreTable
   private val ds = new Dices
 
+  /**
+    * Add a player
+    * @param name Name of the player
+    */
   def addPlayer(name: String) = players.addPlayer(name)
+
+  /**
+    * Add throws to the current player
+    * @param n Number of throws to add
+    */
   def addThrows(n: Int): Unit = players.addThrows(n)
+
+  /**
+    * Show the current player name
+    * @return The name of the current player
+    */
   def currentPlName(): String = players.currentPlName
+
+  /**
+    * Show the number of throws the current player has
+    * @return Number of throws
+    */
   def playersThrows(): Int = players.playersThrows
+
+  /**
+    * Switch to the next player
+    */
   def switchCurrentPlayer(): Unit = players.switchCurrentPlayer()
+
+  /**
+    * Consume one of the current player's throws.
+    * Throws IllegalStateException if this would result
+    * in a negative number of throws.
+    */
   def useThrow(): Unit = players.useThrow()
 
-  def throwAll(): Array[Int] = ds.throwAll()
-  def throwGiven(dices: Array[Int]) = ds.throwGiven(dices)
+  // ============================================
 
+  /**
+    * Throw all of the dices
+    * @return The throw result
+    */
+  def throwAll(): Array[Int] = ds.throwAll()
+
+  /**
+    * Throw only specified dices, leaving the rest
+    * as thrown previously
+    * @param dNumToThrow Dices to throw as an array of indices
+    * @return The whole set of dices with some of them rethrown
+    */
+  def throwGiven(dNumToThrow: Array[Int]) = ds.throwGiven(dNumToThrow)
+
+  // ============================================
+
+  /**
+    * Check how many points the current set of dices would score
+    * in a specified scoring combination
+    * @param comb The name of the combination
+    * @return Available points
+    */
   def checkScore(comb: String): Int =
     scoretab.checkScore(comb, ds.prevThrow)
 
+  /**
+    * Score the previous throw in given combination
+    * or add a zero score to the combination
+    * @param comb Combination to score
+    * @param setZero Whether the previous throw should be ignored
+    *                and score set to zero
+    */
   def score(comb: String, setZero: Boolean): Unit =
     scoretab.score(players.currentPlNum, comb, ds.prevThrow, setZero)
 
+  /**
+    * Show the score table
+    * @return Current score table
+    */
   def showScoreTable: String = scoretab.showScoreTable()
+
+  /**
+    * Check whether the sought after scoring combination exists
+    * @param comb The name of the combination to look for
+    * @return True if combination exists
+    */
   def hasCombination(comb: String): Boolean = scoretab.hasCombination(comb)
 }

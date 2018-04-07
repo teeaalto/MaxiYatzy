@@ -2,6 +2,10 @@ package maxiYatzyCmd
 
 import maxiYatzy.MaxiYatzy
 
+/**
+  * A controller for the command line interface
+  * of the game
+  */
 class CmdController {
   private val myatzy = new MaxiYatzy
   val initialStatus: String =
@@ -101,7 +105,7 @@ class CmdController {
     strSplit(0) match {
       case "throw" => {
         if (myatzy.playersThrows < 1) "No throws left."
-        else if (strSplit.length >= 2) parseThrow(strSplit(1))
+        else if (strSplit.length >= 2) parseThrow(strSplit.tail.mkString)
         else "Specify which dices to throw"
       }
       case "score" => {
@@ -137,6 +141,11 @@ class CmdController {
   }
 
 
+  /**
+    * Parse user input
+    * @param str The input to parse
+    * @return The response to the input
+    */
   def parse(str: String): String = {
     str.trim.toLowerCase match {
       case "scores" => myatzy.showScoreTable

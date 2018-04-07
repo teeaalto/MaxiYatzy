@@ -1,5 +1,9 @@
 package maxiYatzy.scores
 
+/**
+  * Large straight score; having all dice values
+  * between two and six scores the sum of values (20)
+  */
 object LargeStraight extends Score {
   override val name = "large straight"
 
