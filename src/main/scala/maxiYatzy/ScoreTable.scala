@@ -9,6 +9,12 @@ import scala.collection.mutable.ArrayBuffer
   */
 class ScoreTable {
   private val combinations = Array(
+    (1,Ones),
+    (2,Twos),
+    (3,Threes),
+    (4,Fours),
+    (5,Fives),
+    (6,Sixes),
     (8,Pair),
     (9,TwoPairs),
     (10,ThreePairs),
