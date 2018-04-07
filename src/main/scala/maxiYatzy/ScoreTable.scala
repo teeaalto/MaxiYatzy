@@ -18,6 +18,9 @@ class ScoreTable {
     (14,SmallStraight),
     (15,LargeStraight),
     (16,FullStraight),
+    (17,Cottage),
+    (18,House),
+    (19,Tower),
     (20,Chance),
     (21,Yatzy)
   )

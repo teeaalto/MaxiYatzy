@@ -19,7 +19,7 @@ five of a kind  |    --    |   25
 small straight  |    15    |   --       
 large straight  |    --    |   20       
 full straight   |     0    |   21       
-cabin           |    24    |   --       
+cottage         |    24    |   --       
 house           |    33    |   30       
 tower           |    --    |   34       
 chance          |    24    |   27       
