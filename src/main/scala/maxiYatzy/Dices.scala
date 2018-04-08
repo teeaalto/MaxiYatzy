@@ -11,6 +11,8 @@ class Dices {
   private def throwOne(): Int =
     math.round(6*random + 0.5).toInt
 
+  var initialThrowDone = false
+
   /**
     * Throw only specified dices, leaving the rest
     * as thrown previously
@@ -42,4 +44,6 @@ class Dices {
     * @return The previous dice roll result
     */
   def prevThrow = result
+
+
 }

@@ -6,6 +6,7 @@ package maxiYatzy.scores
   */
 object Twos extends Score {
   override val name = "twos"
+  override val isUpperSec = true
 
   def score(dices: Array[Int]): Int =
     2*dices.count(_ == 2)

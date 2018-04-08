@@ -6,6 +6,7 @@ package maxiYatzy.scores
   */
 object Ones extends Score {
   override val name = "ones"
+  override val isUpperSec = true
 
   def score(dices: Array[Int]): Int =
     dices.count(_ == 1)

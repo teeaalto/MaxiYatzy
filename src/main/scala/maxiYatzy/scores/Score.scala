@@ -10,6 +10,7 @@ import scala.collection.mutable.HashMap
   */
 abstract class Score {
   def name = "default"
+  def isUpperSec = false
 
   protected def occurrances(dices: Array[Int]): Array[(Int,Int)] = {
     val occ = new HashMap[Int, Int]()

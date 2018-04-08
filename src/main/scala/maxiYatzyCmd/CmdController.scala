@@ -45,7 +45,7 @@ class CmdController {
 
   private def parseThrow(dices: String): String = {
     if (dices == "all") {
-      initialThrowDone = true
+      myatzy.mkInitialThrow()
       val diceResult = myatzy.throwAll()
       myatzy.useThrow()
       updateThrowRequest()
@@ -58,7 +58,7 @@ class CmdController {
       res.mkString("\n")
     }
     else {
-      if (!initialThrowDone) "Make an initial throw with 'throw all'"
+      if (!myatzy.initialThrowDone) "Make an initial throw with 'throw all'"
       else {
         try {
           val dicesSplit = dices.split(",")
@@ -89,11 +89,16 @@ class CmdController {
 
   private def parseScore(comb: String): String = {
     if (myatzy.hasCombination(comb)) {
-      val pnts = if (initialThrowDone) myatzy.checkScore(comb) else 0
-      currentCombination = comb
-      currentParser = parseScoreConfirmation
-      request = s"Score $pnts points in $comb (y/n)?"
-      "Checking points..."
+      myatzy.checkScore(comb) match {
+        case Some(initpnts) => {
+          val pnts = if (myatzy.initialThrowDone) initpnts else 0
+          currentCombination = comb
+          currentParser = parseScoreConfirmation
+          request = s"Score $pnts points in $comb (y/n)?"
+          "Checking points..."
+        }
+        case None => myatzy.currentPlName + s" has already scored $comb"
+      }
     }
     else s"Unknown combination '$comb'"
   }
@@ -120,15 +125,16 @@ class CmdController {
   private def parseScoreConfirmation(resp: String): String = {
     resp match {
       case "y" => {
-        myatzy.score(currentCombination, !initialThrowDone)
-        initialThrowDone = false
+        myatzy.score(currentCombination, !myatzy.initialThrowDone)
         val message = "Points set for " + myatzy.currentPlName()
-        myatzy.switchCurrentPlayer()
-        myatzy.addThrows(3)
-        currentCombination = ""
-        currentParser = parseThrowScore
-        updateThrowRequest()
-        message
+        val hasNextTurn = myatzy.nextPlayerTurn()
+        if (hasNextTurn) {
+          currentCombination = ""
+          currentParser = parseThrowScore
+          updateThrowRequest()
+          message
+        }
+        else "Pelin pitäs päättyä tähän?"
       }
       case "n" => {
         currentParser = parseThrowScore

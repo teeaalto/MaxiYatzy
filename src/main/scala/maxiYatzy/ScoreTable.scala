@@ -8,49 +8,52 @@ import scala.collection.mutable.ArrayBuffer
   * Scoring: the combinations and the current situation
   */
 class ScoreTable {
-  private val combinations = Array(
-    (1,Ones),
-    (2,Twos),
-    (3,Threes),
-    (4,Fours),
-    (5,Fives),
-    (6,Sixes),
-    (8,Pair),
-    (9,TwoPairs),
-    (10,ThreePairs),
-    (11,ThreeOfAKind),
-    (12,FourOfAKind),
-    (13,FiveOfAKind),
-    (14,SmallStraight),
-    (15,LargeStraight),
-    (16,FullStraight),
-    (17,Cottage),
-    (18,House),
-    (19,Tower),
-    (20,Chance),
-    (21,Yatzy)
+  private val combinations = Map(
+// comb num -> combination
+    1 -> Ones,
+    2 -> Twos,
+    3 -> Threes,
+    4 -> Fours,
+    5 -> Fives,
+    6 -> Sixes,
+    8 -> Pair,
+    9 -> TwoPairs,
+    10 -> ThreePairs,
+    11 -> ThreeOfAKind,
+    12 -> FourOfAKind,
+    13 -> FiveOfAKind,
+    14 -> SmallStraight,
+    15 -> LargeStraight,
+    16 -> FullStraight,
+    17 -> Cottage,
+    18 -> House,
+    19 -> Tower,
+    20 -> Chance,
+    21 -> Yatzy,
   )
 
-  private val scores = new ArrayBuffer[(Int,  // Player name
+  private val scores = new ArrayBuffer[(Int,  // Player number
                                         Int,  // Combination number
-                                        Int)] // Points
+                                        Int,  // Points
+                                        Boolean)] // Is of upper section
 
-                                                      // (points, combination
-  private def tryCombination(comb: String, ds: Array[Int]): (Int, Int) = {
-    var pnts = -1
-    var combinationMatch = -1
+  private def combNumber(comb: String): Option[Int] = {
+    val knownCombs = for ((k,v) <- combinations if v.name == comb) yield k
+    knownCombs.headOption
 
-    for (c <- combinations) {
-      if (c._2.name == comb) {
-        combinationMatch = c._1
-        pnts = c._2.score(ds)
-      }
-    }
-
-    if (pnts < 0) throw new IllegalArgumentException
-
-    (pnts, combinationMatch)
   }
+
+                                                  // (points, combination, is upper sec
+  private def tryCombination(comb: String, ds: Array[Int]): (Int, Int, Boolean) = {
+    combNumber(comb) match {
+      case Some(combnum) => {
+        val foundComb = combinations(combnum)
+        (foundComb.score(ds),combnum, foundComb.isUpperSec)
+      }
+      case None => throw new IllegalArgumentException
+    }
+  }
+
 
   /**
     * Check whether the sought after scoring combination exists
@@ -58,20 +61,34 @@ class ScoreTable {
     * @return True if combination exists
     */
   def hasCombination(comb: String): Boolean = {
-    val knownCombs = for (c <- combinations) yield c._2.name
-    knownCombs.contains(comb)
+    val knownCombs = for (c <- combinations.values) yield c.name
+    knownCombs.toArray.contains(comb)
   }
 
   /**
     * Check how many points a set of dice values would score
-    * in a specified scoring combination
+    * in a specified scoring combination or imply that
+    * the current player already has scored the combination
     * @param comb The name of the combination
     * @param ds The set of dices
+    * @param plnum Current player number
     * @return Available points
     */
-  def checkScore(comb: String, ds: Array[Int]): Int =
-    tryCombination(comb, ds)._1
+  def checkScore(comb: String, ds: Array[Int], plnum: Int): Option[Int] = {
+    combNumber(comb) match {
+      case Some(combnum) => {
+        if (!playerHasScore(combnum, plnum)) Some(combinations(combnum).score(ds))
+        else None
+      }
+      case None => None
+    }
+  }
 
+
+  private def playerHasScore(combnum: Int, plnum: Int) =
+    scores.exists(p => p._1 == plnum && p._2 == combnum)
+
+  
   /**
     * Add a scoring datum
     * @param plnum The number of the player for whom the score is designated
@@ -83,8 +100,8 @@ class ScoreTable {
             comb: String,
             ds: Array[Int],
             setZero: Boolean): Unit = {
-    val (pnts, combnum) = tryCombination(comb, ds)
-    scores += ((plnum, combnum, if (setZero) 0 else pnts ))
+    val (pnts, combnum, isUpperSec) = tryCombination(comb, ds)
+    scores += ((plnum, combnum, if (setZero) 0 else pnts, isUpperSec))
   }
 
   /**
