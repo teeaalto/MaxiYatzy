@@ -2,6 +2,7 @@ package maxiYatzy
 
 import scores._
 
+import scala.collection.mutable.HashSet
 import scala.collection.mutable.ArrayBuffer
 
 /**
@@ -32,10 +33,12 @@ class ScoreTable {
     21 -> Yatzy,
   )
 
-  private val scores = new ArrayBuffer[(Int,  // Player number
-                                        Int,  // Combination number
-                                        Int,  // Points
-                                        Boolean)] // Is of upper section
+  private val scores = new HashSet[(
+    Int,     // Player number
+    Int,     // Combination number
+    Int,     // Points
+    Boolean  // Is of upper section
+  )]
 
   private def combNumber(comb: String): Option[Int] = {
     val knownCombs = for ((k,v) <- combinations if v.name == comb) yield k
@@ -101,12 +104,88 @@ class ScoreTable {
             ds: Array[Int],
             setZero: Boolean): Unit = {
     val (pnts, combnum, isUpperSec) = tryCombination(comb, ds)
+    if (isUpperSec) {
+      val plUpperScore =
+        for (
+          s <- scores
+          if s._1 == plnum
+          if s._4) yield s._3
+      var plUScSum = 0
+      for (pus <- plUpperScore) plUScSum += pus
+      if (plUScSum >= 84) scores += ((plnum, 7, 50, false))
+    }
     scores += ((plnum, combnum, if (setZero) 0 else pnts, isUpperSec))
   }
+
+  private val maxCombNameLen = (for (v <- combinations.values) yield v.name.length).max
 
   /**
     * Show the score table
     * @return Current score table
     */
-  def showScoreTable(): String = scores.toString
+  def showScoreTable(players: Map[Int, String]): String = {
+    val columnpadding = 1
+    val plKeys = players.keys
+    val linerow = "-" * (
+      maxCombNameLen +
+      (2*columnpadding + 1)*players.size +
+      {
+        var sum = 0
+        for (plname <- players.values) sum += plname.length
+        sum
+      }
+    )
+    val rowsCont = new ArrayBuffer[String]
+    val thisrowcont = new ArrayBuffer[String]()
+
+    def pointrow(i: Int) = {
+      val thisrowcont = new ArrayBuffer[String]()
+      val thisrowpnts = scores.filter(_._2 == i)
+      thisrowcont += (
+        combinations(i).name +
+          " " * (maxCombNameLen - combinations(i).name.length)
+        )
+      for (k <- plKeys) {
+        val pnts = thisrowpnts.filter(_._1 == k)
+        pnts.headOption match {
+          case Some((_, _, pnt, _)) => {
+            val lpad = (players(k).length - pnt.toString.length) / 2
+            val rpad = players(k).length - lpad
+            thisrowcont += (
+              " " * columnpadding +
+                "|" +
+                " " * columnpadding +
+                " " * lpad +
+                pnt +
+                " " * rpad
+              )
+          }
+          case None => thisrowcont += (
+            " " * columnpadding +
+              "|" +
+              " " * (columnpadding + players(k).length)
+            )
+        }
+      }
+
+      thisrowcont.mkString
+    }
+
+    thisrowcont += " " * maxCombNameLen
+    for (k <- plKeys) thisrowcont += {
+      val pl = players(k)
+      s" | $pl"
+    }
+    rowsCont += thisrowcont.mkString
+    rowsCont += linerow
+    for (i <- 1 to 6) rowsCont += pointrow(i)
+    rowsCont += linerow
+    rowsCont += "sum"
+    rowsCont += "bonus"
+    rowsCont += linerow
+    for (i <- 8 to 21) rowsCont += pointrow(i)
+    rowsCont += linerow
+    rowsCont += "total\n"
+    rowsCont.mkString("\n")
+  }
 }

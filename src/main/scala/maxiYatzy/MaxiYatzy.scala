@@ -98,7 +98,7 @@ class MaxiYatzy {
     *
     * @return Current score table
     */
-  def showScoreTable: String = scoretab.showScoreTable()
+  def showScoreTable: String = scoretab.showScoreTable(players.players)
 
   /**
     * Check whether the sought after scoring combination exists

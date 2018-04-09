@@ -2,4 +2,6 @@ build.sbt
 .idea/
 project/
 target/
+out/
+*.MF
 

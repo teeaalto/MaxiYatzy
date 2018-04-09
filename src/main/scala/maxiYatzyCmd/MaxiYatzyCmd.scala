@@ -8,7 +8,7 @@ import scala.annotation.tailrec
   * @author Tuomas Aalto
   */
 object MaxiYatzyCmd {
-  def main(args: Array[String]) = {
+  def main(args: Array[String]): Unit = {
 
     val ctrl = new CmdController
 

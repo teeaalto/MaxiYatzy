@@ -8,7 +8,7 @@ import scala.collection.mutable.HashMap
   * A collection of players
   */
 class Players {
-  private val players = HashMap.empty[Int, Player]
+  private val players_ = HashMap.empty[Int, Player]
   private var nextPNumber = 1
   private var currentPlayer = 1
 
@@ -17,7 +17,7 @@ class Players {
     * @param name The name of the player
     */
   def addPlayer(name: String) = {
-    players += (nextPNumber -> new Player(name))
+    players_ += (nextPNumber -> new Player(name))
     nextPNumber += 1
   }
 
@@ -28,25 +28,32 @@ class Players {
     */
   def playerName(num: Int): String = {
     try {
-      players(num).name
+      players_(num).name
     } catch {
       case ex: NoSuchElementException => "unknown player"
     }
   }
 
   /**
+    * Get all player names and corresponding player numbers
+    * @return Player numbers and names
+    */
+  def players: Map[Int,String] =
+    (for ((k,v) <- players_) yield (k,v.name)).toMap[Int, String]
+
+  /**
     * Switch to the next player as the current player
     */
   def switchCurrentPlayer(): Unit = {
     currentPlayer += 1
-    if (!players.contains(currentPlayer)) currentPlayer = 1
+    if (!players_.contains(currentPlayer)) currentPlayer = 1
   }
 
   /**
     * Get the name of the current player
     * @return The current player name
     */
-  def currentPlName: String = players(currentPlayer).name
+  def currentPlName: String = players_(currentPlayer).name
 
   /**
     * Get the number of the current player
@@ -59,7 +66,7 @@ class Players {
     * @return Number of throws
     */
   def playersThrows: Int = {
-    players(currentPlayer).throws
+    players_(currentPlayer).throws
   }
 
   /**
@@ -67,7 +74,7 @@ class Players {
     * @param n Number of throws to add
     */
   def addThrows(n: Int): Unit = {
-    players(currentPlayer).addThrows(n)
+    players_(currentPlayer).addThrows(n)
   }
 
   /**
@@ -76,6 +83,6 @@ class Players {
     * result in a negative number of throws.
     */
   def useThrow(): Unit = {
-    players(currentPlayer).useThrow()
+    players_(currentPlayer).useThrow()
   }
 }
