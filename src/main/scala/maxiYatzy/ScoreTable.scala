@@ -125,67 +125,115 @@ class ScoreTable {
     */
   def showScoreTable(players: Map[Int, String]): String = {
     val columnpadding = 1
-    val plKeys = players.keys
+    val plKeys = players.keys.toSeq.sorted
     val linerow = "-" * (
       maxCombNameLen +
       (2*columnpadding + 1)*players.size +
-      {
-        var sum = 0
-        for (plname <- players.values) sum += plname.length
-        sum
-      }
-    )
-    val rowsCont = new ArrayBuffer[String]
-    val thisrowcont = new ArrayBuffer[String]()
+      (for (plname <- players.values) yield plname.length).sum
+    ) + "\n"
+    val rows = new StringBuilder
+    // val thisrowcont = new ArrayBuffer[String]()
+
+    def pointpad(pnt: Int, plname: String): String = {
+      val lpad = (plname.length - pnt.toString.length) / 2
+      val rpad = plname.length - lpad - pnt.toString.length
+      " " * columnpadding +
+          "|" +
+          " " * columnpadding +
+          " " * lpad +
+          pnt +
+          " " * rpad
+    }
+
+    def emptypad(plname: String): String = {
+      " " * columnpadding +
+          "|" +
+          " " * (columnpadding + plname.length)
+    }
 
     def pointrow(i: Int) = {
-      val thisrowcont = new ArrayBuffer[String]()
+      val thisrow = new StringBuilder
       val thisrowpnts = scores.filter(_._2 == i)
-      thisrowcont += (
+      thisrow append (
         combinations(i).name +
           " " * (maxCombNameLen - combinations(i).name.length)
         )
       for (k <- plKeys) {
         val pnts = thisrowpnts.filter(_._1 == k)
         pnts.headOption match {
-          case Some((_, _, pnt, _)) => {
-            val lpad = (players(k).length - pnt.toString.length) / 2
-            val rpad = players(k).length - lpad
-            thisrowcont += (
-              " " * columnpadding +
-                "|" +
-                " " * columnpadding +
-                " " * lpad +
-                pnt +
-                " " * rpad
-              )
-          }
-          case None => thisrowcont += (
-            " " * columnpadding +
-              "|" +
-              " " * (columnpadding + players(k).length)
-            )
+          case Some((_, _, pnt, _)) =>
+            thisrow append pointpad(pnt, players(k))
+          case None =>
+            thisrow append emptypad(players(k))
         }
       }
 
-      thisrowcont.mkString
+      thisrow + "\n"
     }
 
-    thisrowcont += " " * maxCombNameLen
-    for (k <- plKeys) thisrowcont += {
+    rows append (" " * maxCombNameLen)
+    for (k <- plKeys) rows append {
       val pl = players(k)
       s" | $pl"
     }
-    rowsCont += thisrowcont.mkString
-    rowsCont += linerow
-    for (i <- 1 to 6) rowsCont += pointrow(i)
-    rowsCont += linerow
-    rowsCont += "sum"
-    rowsCont += "bonus"
-    rowsCont += linerow
-    for (i <- 8 to 21) rowsCont += pointrow(i)
-    rowsCont += linerow
-    rowsCont += "total\n"
-    rowsCont.mkString("\n")
+    rows append "\n"
+    rows append linerow
+    for (i <- (
+        for ((k,v) <- combinations
+        if v.isUpperSec) yield k
+        ).toSeq.sorted)
+      rows append pointrow(i)
+    rows append linerow
+    rows append (
+        "sum" +
+        " " * (maxCombNameLen - 3)
+    )
+    for (k <- plKeys) {
+      val usecsum = (
+        for (usecscore <- scores
+            if usecscore._1 == k
+            if usecscore._4)
+        yield usecscore._3).sum
+      rows append pointpad(usecsum, players(k))
+    }
+    rows append "\n"
+    rows append (
+      "bonus" +
+          " " * (maxCombNameLen - 5)
+    )
+    for (k <- plKeys) {
+      val usecsum = (
+        for (usecscore <- scores
+             if usecscore._1 == k
+             if usecscore._2 == 8)
+          yield usecscore._3).sum
+      rows append (
+        if (usecsum <= 0) emptypad(players(k))
+        else pointpad(usecsum, players(k))
+      )
+    }
+    rows append "\n"
+    rows append linerow
+    for (i <- (
+      for ((k,v) <- combinations
+           if !v.isUpperSec) yield k
+      ).toSeq.sorted)
+      rows append pointrow(i)
+    rows append linerow
+    rows append (
+      "total" +
+        " " * (maxCombNameLen - 5)
+      )
+    for (k <- plKeys) {
+      val totalsum = (
+        for (plscore <- scores
+             if plscore._1 == k
+        ) yield plscore._3).sum
+
+      rows append pointpad(totalsum, players(k))
+    }
+    rows.toString
   }
 }
+
+// TODO: Mikään ei taida lisätä yläkertabonusta
