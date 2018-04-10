@@ -105,13 +105,10 @@ class ScoreTable {
             setZero: Boolean): Unit = {
     val (pnts, combnum, isUpperSec) = tryCombination(comb, ds)
     if (isUpperSec) {
-      val plUpperScore =
-        for (
-          s <- scores
+      val plUScSum = (for (
+          s <- scores.toArray
           if s._1 == plnum
-          if s._4) yield s._3
-      var plUScSum = 0
-      for (pus <- plUpperScore) plUScSum += pus
+          if s._4) yield s._3).sum
       if (plUScSum >= 84) scores += ((plnum, 7, 50, false))
     }
     scores += ((plnum, combnum, if (setZero) 0 else pnts, isUpperSec))
@@ -132,7 +129,6 @@ class ScoreTable {
       (for (plname <- players.values) yield plname.length).sum
     ) + "\n"
     val rows = new StringBuilder
-    // val thisrowcont = new ArrayBuffer[String]()
 
     def pointpad(pnt: Int, plname: String): String = {
       val lpad = (plname.length - pnt.toString.length) / 2
@@ -151,12 +147,12 @@ class ScoreTable {
           " " * (columnpadding + plname.length)
     }
 
-    def pointrow(i: Int) = {
+    def pointrow(combNum: Int, combName: String) = {
       val thisrow = new StringBuilder
-      val thisrowpnts = scores.filter(_._2 == i)
+      val thisrowpnts = scores.filter(_._2 == combNum)
       thisrow append (
-        combinations(i).name +
-          " " * (maxCombNameLen - combinations(i).name.length)
+        combName +
+          " " * (maxCombNameLen - combName.length)
         )
       for (k <- plKeys) {
         val pnts = thisrowpnts.filter(_._1 == k)
@@ -182,7 +178,7 @@ class ScoreTable {
         for ((k,v) <- combinations
         if v.isUpperSec) yield k
         ).toSeq.sorted)
-      rows append pointrow(i)
+      rows append pointrow(i, combinations(i).name)
     rows append linerow
     rows append (
         "sum" +
@@ -190,35 +186,20 @@ class ScoreTable {
     )
     for (k <- plKeys) {
       val usecsum = (
-        for (usecscore <- scores
+        for (usecscore <- scores.toArray
             if usecscore._1 == k
             if usecscore._4)
         yield usecscore._3).sum
       rows append pointpad(usecsum, players(k))
     }
     rows append "\n"
-    rows append (
-      "bonus" +
-          " " * (maxCombNameLen - 5)
-    )
-    for (k <- plKeys) {
-      val usecsum = (
-        for (usecscore <- scores
-             if usecscore._1 == k
-             if usecscore._2 == 8)
-          yield usecscore._3).sum
-      rows append (
-        if (usecsum <= 0) emptypad(players(k))
-        else pointpad(usecsum, players(k))
-      )
-    }
-    rows append "\n"
+    rows append pointrow(7, "bonus")
     rows append linerow
     for (i <- (
       for ((k,v) <- combinations
            if !v.isUpperSec) yield k
       ).toSeq.sorted)
-      rows append pointrow(i)
+      rows append pointrow(i, combinations(i).name)
     rows append linerow
     rows append (
       "total" +
@@ -226,14 +207,13 @@ class ScoreTable {
       )
     for (k <- plKeys) {
       val totalsum = (
-        for (plscore <- scores
+        for (plscore <- scores.toArray
              if plscore._1 == k
         ) yield plscore._3).sum
 
       rows append pointpad(totalsum, players(k))
     }
+    rows append "\n"
     rows.toString
   }
 }
-
-// TODO: Mikään ei taida lisätä yläkertabonusta

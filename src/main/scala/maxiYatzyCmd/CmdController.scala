@@ -126,7 +126,7 @@ class CmdController {
     resp match {
       case "y" => {
         myatzy.score(currentCombination, !myatzy.initialThrowDone)
-        val message = "Points set for " + myatzy.currentPlName()
+        val message = myatzy.showScoreTable // "Points set for " + myatzy.currentPlName()
         val hasNextTurn = myatzy.nextPlayerTurn()
         if (hasNextTurn) {
           currentCombination = ""
