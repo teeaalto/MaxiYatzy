@@ -104,6 +104,7 @@ class ScoreTable {
             ds: Array[Int],
             setZero: Boolean): Unit = {
     val (pnts, combnum, isUpperSec) = tryCombination(comb, ds)
+    scores += ((plnum, combnum, if (setZero) 0 else pnts, isUpperSec))
     if (isUpperSec && !scores.exists(p => p._1 == plnum && p._2 == 7)) {
       val plUScSum = (for (
           s <- scores
@@ -111,7 +112,6 @@ class ScoreTable {
           if s._4) yield s._3).sum
       if (plUScSum >= 84) scores += ((plnum, 7, 50, false))
     }
-    scores += ((plnum, combnum, if (setZero) 0 else pnts, isUpperSec))
   }
 
   private val maxCombNameLen = (for (v <- combinations.values) yield v.name.length).max
