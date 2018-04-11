@@ -23,22 +23,19 @@ class CmdController {
   private var currentParser = parseNewPlayer _
   var request: String = "Give player name or 'ok' to start playing"
   private var currentCombination = ""
-  private var playerAdded = false
-  private var initialThrowDone = false
 
   private def parseNewPlayer(str: String): String = {
     if (str.toLowerCase.trim == "ok") {
-      if (playerAdded) {
+      if (myatzy.playerAdded) {
         currentParser = parseThrowScore
         myatzy.addThrows(3)
         updateThrowRequest()
-        "All players have been added, starting the game..."
+        myatzy.showScoreTable
       }
       else "Add at least one player"
     }
     else {
       myatzy.addPlayer(str)
-      playerAdded = true
       "Player " + str + " added"
     }
   }
@@ -46,16 +43,10 @@ class CmdController {
   private def parseThrow(dices: String): String = {
     if (dices == "all") {
       myatzy.mkInitialThrow()
-      val diceResult = myatzy.throwAll()
+      myatzy.throwAll()
       myatzy.useThrow()
       updateThrowRequest()
-
-      val res = {
-        for (i <- 1 to 6) yield {
-          s"Dice $i: " + diceResult(i-1)
-        }
-      }
-      res.mkString("\n")
+      myatzy.showDices
     }
     else {
       if (!myatzy.initialThrowDone) "Make an initial throw with 'throw all'"
@@ -160,6 +151,6 @@ class CmdController {
   }
 
   private def updateThrowRequest(): Unit = {
-    request = myatzy.currentPlName + "'s turn. Throw or score. Throws left: " + myatzy.playersThrows()
+    request = myatzy.currentPlName + "'s turn. Throw or score. Throws left: " + myatzy.playersThrows
   }
 }

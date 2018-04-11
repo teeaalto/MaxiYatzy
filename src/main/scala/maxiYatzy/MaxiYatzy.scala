@@ -29,14 +29,14 @@ class MaxiYatzy {
     *
     * @return The name of the current player
     */
-  def currentPlName(): String = players.currentPlName
+  def currentPlName: String = players.currentPlName
 
   /**
     * Show the number of throws the current player has
     *
     * @return Number of throws
     */
-  def playersThrows(): Int = players.playersThrows
+  def playersThrows: Int = players.playersThrows
 
 
   /**
@@ -45,6 +45,13 @@ class MaxiYatzy {
     * in a negative number of throws.
     */
   def useThrow(): Unit = players.useThrow()
+
+  /**
+    * Indicates whether at least one player has been
+    * added to the game
+    * @return true if there is a player in the game
+    */
+  def playerAdded: Boolean = players.playerAdded
 
   // ============================================
 
@@ -69,6 +76,12 @@ class MaxiYatzy {
   def mkInitialThrow(): Unit = {
     ds.initialThrowDone = true
   }
+
+  /**
+    * Pretty prints the previous dice result
+    * @return Dices from the previous throw
+    */
+  def showDices: String = ds.showDices
 
   // ============================================
 

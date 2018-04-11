@@ -45,5 +45,16 @@ class Dices {
     */
   def prevThrow = result
 
-
+  /**
+    * Pretty prints the previous dice result
+    * @return Dices from the previous throw
+    */
+  def showDices: String = {
+    val res = {
+      for (i <- 1 to 6) yield {
+        s"Dice $i: " + result(i - 1)
+      }
+    }
+    res.mkString("\n")
+  }
 }

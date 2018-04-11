@@ -11,6 +11,7 @@ class Players {
   private val players_ = HashMap.empty[Int, Player]
   private var nextPNumber = 1
   private var currentPlayer = 1
+  private var playerAdded_ = false
 
   /**
     * Add a player
@@ -19,7 +20,15 @@ class Players {
   def addPlayer(name: String) = {
     players_ += (nextPNumber -> new Player(name))
     nextPNumber += 1
+    playerAdded_ = true
   }
+
+  /**
+    * Indicates whether at least one player has been
+    * added to the game
+    * @return true if there is a player in the game
+    */
+  def playerAdded = playerAdded_
 
   /**
     * Get the player name
