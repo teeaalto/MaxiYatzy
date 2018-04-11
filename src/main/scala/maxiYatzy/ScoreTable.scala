@@ -2,7 +2,7 @@ package maxiYatzy
 
 import scores._
 
-import scala.collection.mutable.HashSet
+// import scala.collection.mutable.HashSet
 import scala.collection.mutable.ArrayBuffer
 
 /**
@@ -33,7 +33,7 @@ class ScoreTable {
     21 -> Yatzy,
   )
 
-  private val scores = new HashSet[(
+  private val scores = new ArrayBuffer[(
     Int,     // Player number
     Int,     // Combination number
     Int,     // Points
@@ -104,9 +104,9 @@ class ScoreTable {
             ds: Array[Int],
             setZero: Boolean): Unit = {
     val (pnts, combnum, isUpperSec) = tryCombination(comb, ds)
-    if (isUpperSec) {
+    if (isUpperSec && !scores.exists(p => p._1 == plnum && p._2 == 7)) {
       val plUScSum = (for (
-          s <- scores.toArray
+          s <- scores
           if s._1 == plnum
           if s._4) yield s._3).sum
       if (plUScSum >= 84) scores += ((plnum, 7, 50, false))
@@ -130,9 +130,9 @@ class ScoreTable {
     ) + "\n"
     val rows = new StringBuilder
 
-    def pointpad(pnt: Int, plname: String): String = {
-      val lpad = (plname.length - pnt.toString.length) / 2
-      val rpad = plname.length - lpad - pnt.toString.length
+    def pointpad(pnt: String, plname: String): String = {
+      val lpad = (plname.length - pnt.length) / 2
+      val rpad = plname.length - lpad - pnt.length
       " " * columnpadding +
           "|" +
           " " * columnpadding +
@@ -157,8 +157,16 @@ class ScoreTable {
       for (k <- plKeys) {
         val pnts = thisrowpnts.filter(_._1 == k)
         pnts.headOption match {
-          case Some((_, _, pnt, _)) =>
-            thisrow append pointpad(pnt, players(k))
+          case Some((_, combnum, pnt, upsec)) => {
+            val pntstr =
+              if (upsec) {
+                val pntdiff = pnt - 4*combnum
+                if (pntdiff > 0) "+" + pntdiff
+                else pntdiff.toString
+              }
+              else pnt.toString
+            thisrow append pointpad(pntstr, players(k))
+          }
           case None =>
             thisrow append emptypad(players(k))
         }
@@ -186,11 +194,11 @@ class ScoreTable {
     )
     for (k <- plKeys) {
       val usecsum = (
-        for (usecscore <- scores.toArray
+        for (usecscore <- scores
             if usecscore._1 == k
             if usecscore._4)
         yield usecscore._3).sum
-      rows append pointpad(usecsum, players(k))
+      rows append pointpad(usecsum.toString, players(k))
     }
     rows append "\n"
     rows append pointrow(7, "bonus")
@@ -207,11 +215,11 @@ class ScoreTable {
       )
     for (k <- plKeys) {
       val totalsum = (
-        for (plscore <- scores.toArray
+        for (plscore <- scores
              if plscore._1 == k
         ) yield plscore._3).sum
 
-      rows append pointpad(totalsum, players(k))
+      rows append pointpad(totalsum.toString, players(k))
     }
     rows append "\n"
     rows.toString
