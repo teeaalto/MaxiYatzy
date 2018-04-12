@@ -30,7 +30,7 @@ class ScoreTable {
     18 -> House,
     19 -> Tower,
     20 -> Chance,
-    21 -> Yatzy,
+    21 -> Yatzy
   )
 
   private val scores = new ArrayBuffer[(
@@ -40,10 +40,13 @@ class ScoreTable {
     Boolean  // Is of upper section
   )]
 
+  private val upperSecBonusNum = 7
+  private val upperSecBonusLim =
+    (for ((k,comb) <- combinations if comb.isUpperSec) yield 4*k).sum
+
   private def combNumber(comb: String): Option[Int] = {
     val knownCombs = for ((k,v) <- combinations if v.name == comb) yield k
     knownCombs.headOption
-
   }
 
                                                   // (points, combination, is upper sec
@@ -57,16 +60,6 @@ class ScoreTable {
     }
   }
 
-
-  /**
-    * Check whether the sought after scoring combination exists
-    * @param comb The name of the combination to look for
-    * @return True if combination exists
-    */
-  def hasCombination(comb: String): Boolean = {
-    val knownCombs = for (c <- combinations.values) yield c.name
-    knownCombs.toArray.contains(comb)
-  }
 
   /**
     * Check how many points a set of dice values would score
@@ -87,10 +80,37 @@ class ScoreTable {
     }
   }
 
+  /**
+    * The number of known combinations
+    * @return # of combinations
+    */
+  def combinationCount = combinations.size
 
   private def playerHasScore(combnum: Int, plnum: Int) =
     scores.exists(p => p._1 == plnum && p._2 == combnum)
 
+  /**
+    * Check whether the sought after scoring combination exists
+    * @param comb The name of the combination to look for
+    * @return True if combination exists
+    */
+  def hasCombination(comb: String): Boolean = {
+    val knownCombs = for (c <- combinations.values) yield c.name
+    knownCombs.toArray.contains(comb)
+  }
+
+  def highestScorePlNums: Array[Int] = {
+    // Ei tasapelejä => saadaan yhdelle riville!
+    // scores.groupBy(_._1).map(k => k._1 -> (for (score <-k._2) yield score._3).sum).maxBy(_._2)._1
+    val plscores = scores.groupBy(_._1).map(k => k._1 -> (for (score <-k._2) yield score._3).sum).toArray.sortBy(-_._2)
+    for (plhscore <- plscores.takeWhile(_._2 == plscores(0)._2)) yield plhscore._1
+  }
+
+  /**
+    * The number of score data stored thus far
+    * @return # of scores
+    */
+  def scoreNoBonusCount = scores.count(_._2 != upperSecBonusNum)
   
   /**
     * Add a scoring datum
@@ -105,12 +125,12 @@ class ScoreTable {
             setZero: Boolean): Unit = {
     val (pnts, combnum, isUpperSec) = tryCombination(comb, ds)
     scores += ((plnum, combnum, if (setZero) 0 else pnts, isUpperSec))
-    if (isUpperSec && !scores.exists(p => p._1 == plnum && p._2 == 7)) {
+    if (isUpperSec && !scores.exists(p => p._1 == plnum && p._2 == upperSecBonusNum)) {
       val plUScSum = (for (
           s <- scores
           if s._1 == plnum
           if s._4) yield s._3).sum
-      if (plUScSum >= 84) scores += ((plnum, 7, 50, false))
+      if (plUScSum >= upperSecBonusLim) scores += ((plnum, upperSecBonusNum, 50, false))
     }
   }
 
@@ -201,7 +221,7 @@ class ScoreTable {
       rows append pointpad(usecsum.toString, players(k))
     }
     rows append "\n"
-    rows append pointrow(7, "bonus")
+    rows append pointrow(upperSecBonusNum, "bonus")
     rows append linerow
     for (i <- (
       for ((k,v) <- combinations

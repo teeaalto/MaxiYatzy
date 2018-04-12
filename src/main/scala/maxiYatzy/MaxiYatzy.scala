@@ -57,7 +57,6 @@ class MaxiYatzy {
 
   /**
     * Throw all of the dices
-    *
     * @return The throw result
     */
   def throwAll(): Array[Int] = ds.throwAll()
@@ -96,6 +95,14 @@ class MaxiYatzy {
     scoretab.checkScore(comb, ds.prevThrow, players.currentPlNum)
 
   /**
+    * The names of the highest scoring players at this point of the
+    * game (if no draws, only one will be returned)
+    * @return Player names
+    */
+  def highestScorePlayers: Array[String] =
+    for (plnum <- scoretab.highestScorePlNums) yield players.playerName(plnum)
+
+  /**
     * Score the previous throw in given combination
     * or add a zero score to the combination
     *
@@ -131,7 +138,7 @@ class MaxiYatzy {
     ds.initialThrowDone = false
     players.switchCurrentPlayer()
     players.addThrows(3)
-    true
+    scoretab.scoreNoBonusCount < players.playerCount*scoretab.combinationCount
   }
 
 }

@@ -125,7 +125,17 @@ class CmdController {
           updateThrowRequest()
           message
         }
-        else "Pelin pitäs päättyä tähän?"
+        else {
+          request = "Start a new game (y/n)?"
+          currentParser = endGameParser
+          val winners = myatzy.highestScorePlayers
+          if (winners.length <= 1) winners(0) + " wins the game!"
+          else
+            "It's a draw between " +
+                winners.init.mkString(", ") +
+                " and " +
+                winners.last + "!"
+        }
       }
       case "n" => {
         currentParser = parseThrowScore
@@ -135,6 +145,10 @@ class CmdController {
       }
       case _ => s"Reply either 'y' or 'n'"
     }
+  }
+
+  def endGameParser(str: String): String = {
+    "Soon I know how to handle the end of the game!"
   }
 
 

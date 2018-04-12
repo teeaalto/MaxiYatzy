@@ -44,11 +44,18 @@ class Players {
   }
 
   /**
+    * The number of players in the game
+    * @return # of players
+    */
+  def playerCount = players.size
+
+  /**
     * Get all player names and corresponding player numbers
     * @return Player numbers and names
     */
   def players: Map[Int,String] =
     (for ((k,v) <- players_) yield (k,v.name)).toMap[Int, String]
+
 
   /**
     * Switch to the next player as the current player
