@@ -62,13 +62,7 @@ class CmdController {
             val diceResult = myatzy.throwGiven(dicesArray)
             myatzy.useThrow()
             updateThrowRequest()
-
-            val res = {
-              for (i <- 1 to 6) yield {
-                s"Dice $i: " + diceResult(i - 1)
-              }
-            }
-            res.mkString("\n")
+            myatzy.showDices
           }
         } catch {
           case _: NumberFormatException => "Specify the dices to throw as either 'all' or e.g. '2,4,5'"
