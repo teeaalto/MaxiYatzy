@@ -7,21 +7,97 @@ import maxiYatzy.MaxiYatzy
   * of the game
   */
 class CmdController {
-  private val myatzy = new MaxiYatzy
+  private var myatzy = new MaxiYatzy
   val initialStatus: String =
     """|MaxiYatzy version n.n
        |Made by Tuomas Aalto
        |*********************
        |Commands:
-       |'info' for instructions
+       |'help' for help
        |'rules' for the rules of this MaxiYatzy
        |'scores' show score table
        |'quit' if you wish to leave the game
        |*********************
        |""".stripMargin
 
+  private val rules: String =
+    """|MaxiYatzy is a dice game for one to 10 players.
+       |In the game, players take turns to throw six
+       |dices. The goal is to gain points by scoring
+       |different combinations of dices. A combination
+       |can be scored even if the criteria of the
+       |combination are not met to yield zero points.
+       |Once all players have scored all of their
+       |combinations, the game ends and the player
+       |with most points is the winner.
+       |
+       |At the start of each turn, player receives
+       |three throws to use. On a throw, the player
+       |can choose to throw all dices or only some of
+       |them. On the first throw of the turn all dices
+       |must be thrown. Unused throws can be spared to
+       |next turns.
+       |
+       |The dice combinations:
+       |pair              - two dices with the same number
+       |two pairs         - two different pairs of dices
+       |three pairs       - three different pairs of dices
+       |three of a kind   - three dices with the same number
+       |four of a kind    - four dices with the same number
+       |five of a kind    - five dices with the same number
+       |small straight    - all dice values from 1 to 5
+       |large straight    - all dice values from 2 to 6
+       |full straight     - all dice values from 1 to 6
+       |cottage           - a pair and three of a kind with
+       |                    different numbers
+       |house             - two three of a kinds with
+       |                    different numbers
+       |tower             - a pair and four of a kind with
+       |                    different numbers
+       |chance            - any combination of dices
+       |yatzy             - six dices with the same number
+       |All combinations yield points equal to the sum
+       |of the dice values, e.g. three fours in three
+       |of a kind gives 3 x 4 = 12 points. An exception
+       |to this rule is yatzy, which always scores 50 points.
+       |
+       |In addition there is a dedicated combination
+       |for each of the dice values, called ones, twos etc..
+       |Any number of given dice value can be
+       |scored in respective combination, eg.
+       |five twos giving ten points. If the score sum
+       |in combinations from ones to sixes is or
+       |exceeds 84, the player receives 50 points extra.
+       |The number 84 can be gained by having four
+       |of a kind in all combinations from ones to
+       |sixes, and hence the score table displays
+       |scores as differences from four of a kind.
+       |The previous example of five twos would
+       |therefore be shown as +2, three fives
+       |would be -5 and so forth.
+    """.stripMargin
+
+  private val help =
+    """|General commands:
+       |'help' for help
+       |'rules' for the rules of this MaxiYatzy
+       |'scores' show score table
+       |'quit' if you wish to leave the game
+       |
+       |Adding players:
+       |'ok' to end adding players
+       |any other string of characters is interpreted
+       |as a player name
+       |
+       |Throwing and scoring:
+       |'throw all' to throw all dices
+       |'throw 1,3' to throw dices 1 and 3
+       |'score pair' to score pair
+    """.stripMargin
+
   private var currentParser = parseNewPlayer _
-  var request: String = "Give player name or 'ok' to start playing"
+  private val newPlayerReq = "Give player name or 'ok' to start playing"
+  var request: String = newPlayerReq
   private var currentCombination = ""
 
   private def parseNewPlayer(str: String): String = {
@@ -141,8 +217,17 @@ class CmdController {
     }
   }
 
-  def endGameParser(str: String): String = {
-    "Soon I know how to handle the end of the game!"
+  private def endGameParser(str: String): String = {
+    str match {
+      case "y" => {
+        myatzy = new MaxiYatzy
+        currentParser = parseNewPlayer
+        request = newPlayerReq
+        currentCombination = ""
+        "Starting a new game..."
+      }
+      case _  => "Tell me if you change your mind."
+    }
   }
 
 
@@ -154,6 +239,8 @@ class CmdController {
   def parse(str: String): String = {
     str.trim.toLowerCase match {
       case "scores" => myatzy.showScoreTable
+      case "rules" => rules
+      case "help" => help
       case _ => currentParser(str)
     }
   }
